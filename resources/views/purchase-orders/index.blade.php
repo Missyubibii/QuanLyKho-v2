@@ -106,16 +106,6 @@
             </div>
         </div>
 
-        {{-- Progress Bar --}}
-        <div x-show="isLoading" x-transition style="display: none;" {{-- Chống nháy --}}
-            class="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-            <div class="flex items-center justify-between mb-2">
-                <span class="text-sm text-yellow-800 dark:text-yellow-200">Đang xử lý...</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                <div class="bg-yellow-600 h-2.5 rounded-full animate-pulse" style="width: 100%"></div>
-            </div>
-        </div>
 
         {{-- Main Table Card --}}
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">

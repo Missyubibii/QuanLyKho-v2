@@ -109,10 +109,11 @@ class DatabaseSeeder extends Seeder
         // Warehouse manager: Có các quyền quản lý kho, KHÔNG CÓ quyền xóa,
         // và KHÔNG có quyền quản lý người dùng/vai trò.
         $warehouseManager->permissions()->sync(
-            Permission::where('name', 'not like', '%.delete')
-                ->where('name', 'not like', 'users.%')
-                ->where('name', 'not like', 'roles.%')
-                ->pluck('id')
+            Permission::where(function ($query) {
+                // Lấy tất cả quyền trừ quyền quản lý user và role
+                $query->where('name', 'not like', 'users.%')
+                    ->where('name', 'not like', 'roles.%');
+            })->pluck('id')
         );
 
         // Warehouse staff: Chỉ xem và tạo phiếu nhập/xuất

@@ -102,8 +102,6 @@
 
                 <div
                     class="px-6 py-4 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 text-right space-x-3">
-                    <a href="{{ route('admin.customers.index') }}"
-                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition duration-300">Hủy</a>
                     <button type="submit"
                         class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Cập
                         nhật</button>

@@ -11,6 +11,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB; // <-- Thêm dòng này
+use Illuminate\Support\Facades\Gate;
 
 class SupplierController extends Controller
 {
@@ -164,40 +166,78 @@ class SupplierController extends Controller
         return redirect()->route('admin.suppliers.index');
     }
 
-    public function bulkDelete(Request $request, NotificationService $notificationService)
+public function bulkDelete(Request $request, NotificationService $notificationService)
     {
-        $this->authorize('delete', Supplier::class);
+        // 1. Kiểm tra quyền. Đảm bảo bạn có quyền 'suppliers.delete' trong seeder.
+        $this->authorize('suppliers.delete');
 
+        // 2. Xác thực dữ liệu đầu vào
         $validated = $request->validate([
             'supplier_ids' => 'required|array',
             'supplier_ids.*' => 'exists:suppliers,id',
         ]);
 
-        try {
-            $count = count($validated['supplier_ids']);
-            Supplier::whereIn('id', $validated['supplier_ids'])->delete();
+        // 3. Khởi tạo biến đếm
+        $deletedCount = 0;
 
-            // Gửi thông báo vào hệ thống
+        try {
+            // 4. Sử dụng Transaction để đảm bảo toàn vẹn dữ liệu
+            DB::transaction(function () use ($validated, &$deletedCount) {
+                // Gán giá trị cho biến bên trong transaction
+                $deletedCount = count($validated['supplier_ids']);
+                Supplier::whereIn('id', $validated['supplier_ids'])->delete();
+            });
+
+            // 5. Gửi thông báo vào hệ thống (notification dropdown)
             $notificationService->notify(
                 Auth::user(),
                 'warning',
                 'Xóa hàng loạt nhà cung cấp',
-                "Đã xóa thành công {$count} nhà cung cấp."
+                "Đã xóa thành công {$deletedCount} nhà cung cấp."
             );
 
-            // Gửi toast thông báo tức thì
-            session()->flash('toast', [
-                'type' => 'success',
-                'message' => "Đã xóa thành công {$count} nhà cung cấp."
+            // 6. Trả về phản hồi thành công dạng JSON cho AJAX
+            return response()->json([
+                'message' => "Đã xóa thành công {$deletedCount} nhà cung cấp."
             ]);
-        } catch (\Exception $e) {
-            Log::error('Lỗi khi xóa hàng loạt nhà cung cấp: ' . $e->getMessage());
-            session()->flash('toast', [
-                'type' => 'error',
-                'message' => 'Xóa hàng loạt thất bại.'
-            ]);
-        }
 
-        return redirect()->route('admin.suppliers.index');
+        } catch (\Exception $e) {
+            // 7. Ghi lỗi vào log
+            Log::error('Lỗi khi xóa hàng loạt nhà cung cấp: ' . $e->getMessage());
+
+            // 8. Trả về phản hồi lỗi dạng JSON
+            return response()->json([
+                'message' => 'Đã có lỗi xảy ra, vui lòng thử lại.'
+            ], 500);
+        }
+    }
+
+    /**
+     * Tìm kiếm nhà cung cấp để trả về JSON cho các form (ví dụ: tạo phiếu nhập).
+     */
+    public function searchJson(Request $request)
+    {
+        $term = $request->input('term', '');
+        $isNumeric = $request->boolean('numeric', false);
+
+
+        if (empty($term) || strlen($term) < 2) {
+            return response()->json([]);
+        }
+        
+        try {
+            $suppliers = Supplier::where(function ($q) use ($term) {
+                $q->where('name', 'like', "%{$term}%")
+                    ->orWhere('contact_person', 'like', "%{$term}%");
+            })
+            ->where('is_active', true) // Chỉ lấy nhà cung cấp đang hoạt động
+            ->select('id', 'name', 'contact_person', 'email', 'phone')
+            ->limit(10)
+            ->get();
+            return response()->json($suppliers);
+        } catch (\Exception $e) {
+            \Log::error("Lỗi tìm kiếm nhà cung cấp JSON: " . $e->getMessage());
+            return response()->json(['error' => 'Lỗi server khi tìm kiếm'], 500);
+        }
     }
 }

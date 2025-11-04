@@ -31,6 +31,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/products/search-json', [ProductController::class, 'searchJson'])->name('products.search-json');
     Route::post('/products/bulk-delete', [ProductController::class, 'bulkDelete'])->name('products.bulk-delete');
 
+    // Route cho tìm kiếm nhà cung cấp
+    Route::get('/suppliers/search-json', [SupplierController::class, 'searchJson'])->name('suppliers.search.json');
+
+    // Route chho tìm kiếm khách hàng
+    Route::get('/customers/search-json', [CustomerController::class, 'searchJson'])->name('customers.search.json');
+
     // Resource route cho products
     Route::resource('products', ProductController::class);
 

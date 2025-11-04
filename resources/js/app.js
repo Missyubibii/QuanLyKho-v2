@@ -8,6 +8,7 @@ import { supplierIndexPage } from './suppliers.js';
 import { customerIndexPage } from './customers.js';
 import { poIndexPage } from './purchase-orders.js';
 import { purchaseOrderForm } from './purchase-order-form.js';
+import { dynamicSearch } from './dynamic-search.js';
 
 // Đăng ký hàm với Alpine.js để có thể dùng trong Blade
 window.productIndexPage = productIndexPage;
@@ -15,6 +16,7 @@ window.supplierIndexPage = supplierIndexPage;
 window.customerIndexPage = customerIndexPage;
 window.poIndexPage = poIndexPage;
 window.purchaseOrderForm = purchaseOrderForm;
+window.dynamicSearch = dynamicSearch;
 
 window.formatCurrency = function (value) {
     if (isNaN(value)) return '0 đ';

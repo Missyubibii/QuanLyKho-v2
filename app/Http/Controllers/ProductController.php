@@ -14,6 +14,9 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+
 
 class ProductController extends Controller
 {
@@ -231,42 +234,53 @@ class ProductController extends Controller
 
     public function bulkDelete(Request $request, NotificationService $notificationService)
     {
+        // 1. Kiểm tra quyền
         $this->authorize('products.delete');
 
+        // 2. Xác thực dữ liệu đầu vào
         $validated = $request->validate([
             'product_ids' => 'required|array',
             'product_ids.*' => 'exists:products,id',
         ]);
 
+        $deletedCount = 0;
+
         try {
-            $count = count($validated['product_ids']);
+            $deletedCount = count($validated['product_ids']);
+            // 3. Sử dụng Transaction để đảm bảo tất cả thành công hoặc tất cả thất bại
+            DB::transaction(function () use ($validated) {
+                // Lấy tất cả sản phẩm cần xóa để xóa ảnh đi kèm
+                $productsToDelete = Product::whereIn('id', $validated['product_ids'])->get();
 
-            // --- Xóa ảnh liên quan (QUAN TRỌNG NẾU CÓ) ---
-            $productsToDelete = Product::whereIn('id', $validated['product_ids'])->get();
-            foreach ($productsToDelete as $product) {
-                if ($product->image) {
-                    Storage::disk('public')->delete($product->image);
+                foreach ($productsToDelete as $product) {
+                    // Xóa ảnh khỏi storage nếu có
+                    if ($product->image && Storage::disk('public')->exists($product->image)) {
+                        Storage::disk('public')->delete($product->image);
+                    }
+                    // Xóa sản phẩm (sử dụng soft delete nếu có trait SoftDeletes)
+                    $product->delete();
                 }
-            }
-            // --- Kết thúc phần xóa ảnh ---
+            });
 
-            // 3. Deletion Logic
-            Product::whereIn('id', $validated['product_ids'])->delete();
-
-            // 4. Notification (Optional but good)
             $notificationService->notify(
-                Auth::user(),
-                'warning',
+                auth::user(),
+                'warning', // Loại thông báo
                 'Xóa hàng loạt sản phẩm',
-                "Đã xóa thành công {$count} sản phẩm."
+                "Đã xóa thành công {$deletedCount} sản phẩm."
             );
 
-            // 5. Return JSON Response (QUAN TRỌNG)
-            return response()->json(['message' => "Đã xóa thành công {$count} sản phẩm."]);
+            // 4. Trả về phản hồi thành công
+            return response()->json([
+                'message' => 'Xóa sản phẩm thành công!'
+            ]);
         } catch (\Exception $e) {
+            // 5. Ghi lỗi vào log để dễ dàng gỡ lỗi
             Log::error('Lỗi khi xóa hàng loạt sản phẩm: ' . $e->getMessage());
-            // Return JSON error response
-            return response()->json(['message' => 'Xóa hàng loạt thất bại.'], 500);
+
+            // 6. Trả về phản hồi lỗi với mã trạng thái 500
+            return response()->json([
+                'message' => 'Đã có lỗi xảy ra, vui lòng thử lại.'
+            ], 500);
         }
     }
 

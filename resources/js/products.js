@@ -65,6 +65,7 @@ export function productIndexPage(initialData) {
             if (!confirm(`Bạn có chắc chắn muốn xóa ${this.selectedProducts.length} sản phẩm đã chọn?`)) {
                 return;
             }
+
             this.isLoading = true;
             try {
                 const response = await fetch('/admin/products/bulk-delete', {
@@ -75,13 +76,33 @@ export function productIndexPage(initialData) {
                     },
                     body: JSON.stringify({ product_ids: this.selectedProducts })
                 });
-                if (!response.ok) throw new Error('Xóa thất bại.');
+
+                const contentType = response.headers.get("content-type");
+                if (!contentType || !contentType.includes("application/json")) {
+                    throw new Error(`Máy chủ trả về phản hồi không hợp lệ. Mã trạng thái: ${response.status}`);
+                }
+
                 const result = await response.json();
-                alert(result.message);
-                window.location.reload();
+
+                if (response.ok) {
+                    // Gửi sự kiện 'toast' thành công
+                    window.dispatchEvent(new CustomEvent('toast', {
+                        detail: { type: 'success', message: result.message }
+                    }));
+                    // Tải lại trang sau 1 giây để người dùng thấy kết quả
+                    setTimeout(() => window.location.reload(), 1000);
+                } else {
+                    // Gửi sự kiện 'toast' lỗi
+                    window.dispatchEvent(new CustomEvent('toast', {
+                        detail: { type: 'error', message: result.message }
+                    }));
+                }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Đã có lỗi xảy ra. Vui lòng thử lại.');
+                // Gửi sự kiện 'toast' lỗi chung
+                window.dispatchEvent(new CustomEvent('toast', {
+                    detail: { type: 'error', message: 'Đã có lỗi xảy ra. Vui lòng thử lại.' }
+                }));
             } finally {
                 this.isLoading = false;
             }

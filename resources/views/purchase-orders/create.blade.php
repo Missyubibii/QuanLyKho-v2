@@ -38,7 +38,7 @@
                             <label for="supplier_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nhà
                                 cung cấp <span class="text-red-500">*</span></label>
                             <select id="supplier_id" name="supplier_id" required x-model="selectedSupplierId"
-                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('supplier_id') border-red-500 @enderror">
+                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('supplier_id') @enderror">
                                 <option value="">-- Chọn NCC --</option>
                                 <template x-for="(name, id) in suppliers" :key="id">
                                     <option :value="id" x-text="name"></option>
@@ -51,14 +51,14 @@
                                 đặt hàng <span class="text-red-500">*</span></label>
                             <input type="date" id="order_date" name="order_date"
                                 value="{{ old('order_date', now()->format('Y-m-d')) }}" required
-                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('order_date') border-red-500 @enderror">
+                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('order_date') @enderror">
                             @error('order_date')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                         </div>
                         <div>
                             <label for="expected_date"
                                 class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ngày dự kiến nhận</label>
                             <input type="date" id="expected_date" name="expected_date" value="{{ old('expected_date') }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('expected_date') border-red-500 @enderror">
+                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('expected_date')@enderror">
                             @error('expected_date')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                         </div>
                     </div>

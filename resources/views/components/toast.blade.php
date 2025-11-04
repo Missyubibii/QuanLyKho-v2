@@ -21,7 +21,9 @@
             this.autoHide();
         }
     }
-}" x-init="initToast()" x-show="show"
+}" x-init="initToast()"
+@toast.window="show = true; message = $event.detail.message; type = $event.detail.type; autoHide();"
+x-show="show"
 x-transition:enter="transition ease-out duration-300"
 x-transition:enter-start="opacity-0 transform translate-y-2 sm:translate-y-0 sm:scale-95"
 x-transition:enter-end="opacity-100 transform translate-y-0 sm:scale-100"

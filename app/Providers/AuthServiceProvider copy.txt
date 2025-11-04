@@ -13,7 +13,8 @@ use App\Policies\SupplierPolicy;
 use App\Policies\CustomerPolicy;
 use Illuminate\Support\Facades\Log;
 
-class AuthServiceProvider extends ServiceProvider
+// class AuthServiceProvider extends ServiceProvider
+class AuthServiceProvider
 {
     /**
      * The policy mappings for the application.
@@ -33,23 +34,24 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Bây giờ dòng này sẽ hoạt động
         $this->registerPolicies();
 
-        Gate::before(function (User $user, string $ability) {
-            Log::info('[AuthServiceProvider] Gate::before called', [
-                'user_id' => $user->id,
-                'ability' => $ability,
-                'is_super_admin' => $user->hasRole('super_admin')
-            ]);
+        // Định nghĩa các gate nếu cần
+        Gate::before(function (User $user, $_ability) {
+            \Log::info('[AuthServiceProvider] Checking Gate::before for user: ' . $user->id);
 
-            if ($user->hasRole('super_admin')) {
-                Log::info('[AuthServiceProvider] AUTHORIZATION BYPASSED for super_admin.');
+            // Logic kiểm tra vai trò 'super_admin'
+            if ($user->roles()->where('name', 'super_admin')->exists()) {
+                Log::info('[AuthServiceProvider] Gate::before -> Bypassed for super_admin (User ID: ' . $user->id . ')');
                 return true;
             }
 
-            Log::info('[AuthServiceProvider] Authorization NOT bypassed.');
+            Log::info('[AuthServiceProvider] Gate::before -> Did NOT bypass for user ID: ' . $user->id);
             return null;
+        });
+
+        Gate::define('products.delete', function (User $user) {
+            return $user->hasRole('super_admin') || $user->hasPermissionTo('products.delete');
         });
     }
 }

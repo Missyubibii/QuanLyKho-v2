@@ -128,7 +128,12 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-600 dark:text-gray-400">Nhà cung cấp</label>
-                            <span class="text-sm font-semibold text-gray-800 dark:text-gray-200">{{ $product->supplier?->name ?? '—' }}</span>
+                            @if($product->supplier)
+                                <a href="{{ route('admin.suppliers.show', $product->supplier_id) }}"
+                                    class="mt-1 text-base font-semibold text-indigo-600 ...">{{ $product->supplier->name }}</a>
+                            @else
+                                <p class="mt-1 text-base ...">N/A</p>
+                            @endif
                         </div>
                     </div>
                 </div>
