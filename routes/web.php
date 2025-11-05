@@ -8,6 +8,8 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PurchaseOrderController;
+use App\Http\Controllers\SalesOrderController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,8 +36,14 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Route cho tìm kiếm nhà cung cấp
     Route::get('/suppliers/search-json', [SupplierController::class, 'searchJson'])->name('suppliers.search.json');
 
-    // Route chho tìm kiếm khách hàng
+    // Route cho tìm kiếm khách hàng
     Route::get('/customers/search-json', [CustomerController::class, 'searchJson'])->name('customers.search.json');
+
+    // Route cho tìm kiếm phiếu nhập kho
+    Route::get('/purchase-orders/search-json', [PurchaseOrderController::class, 'searchJson'])->name('purchase-orders.search.json');
+
+    // Route cho tìm kiếm phiếu xuất kho
+    Route::get('/sales-orders/search-json', [SalesOrderController::class, 'searchJson'])->name('sales-orders.search.json');
 
     // Resource route cho products
     Route::resource('products', ProductController::class);
@@ -51,8 +59,15 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Route cho Purchase Orders
     Route::resource('purchase-orders', PurchaseOrderController::class);
+    Route::post('/purchase-orders/bulk-delete', [PurchaseOrderController::class, 'bulkDeletePOs'])->name('purchase-orders.bulk-delete');
     // Route tùy chỉnh cho hành động "Nhận hàng"
     Route::post('purchase-orders/{purchase_order}/receive', [PurchaseOrderController::class, 'receive'])->name('purchase-orders.receive');
+
+    // Route cho Sales Orders
+    Route::resource('sales-orders', SalesOrderController::class);
+    Route::post('/sales-orders/bulk-delete', [SalesOrderController::class, 'bulkDeleteSOs'])->name('sales-orders.bulk-delete');
+    Route::post('sales-orders/{sales_order}/ship', [SalesOrderController::class, 'ship'])->name('sales-orders.ship');
+
 });
 
 require __DIR__.'/auth.php';

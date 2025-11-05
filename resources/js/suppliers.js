@@ -24,6 +24,8 @@ export function supplierIndexPage(initialData)  {
             }
         },
 
+        
+
         // Hàm chọn nhà cung cấp từ kết quả (ví dụ: để điền vào một form khác)
         selectSupplier(supplier) {
             // Bạn có thể dispatch một sự kiện tùy chỉnh để component khác lắng nghe

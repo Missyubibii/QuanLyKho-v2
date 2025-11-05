@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\PurchaseOrder;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PurchaseOrderPolicy
 {
@@ -62,5 +63,13 @@ class PurchaseOrderPolicy
     public function forceDelete(User $user, PurchaseOrder $purchaseOrder): bool
     {
         return $user->hasPermission('purchase_orders.forceDelete');
+    }
+
+        /**
+     * Determine if the user có thể thực hiện hành động 'approve' (duyệt phiếu nhập kho).
+     */
+    public function approve(User $user, PurchaseOrder $purchaseOrder): bool
+    {
+        return $user->hasPermission('purchase_orders.approve');
     }
 }

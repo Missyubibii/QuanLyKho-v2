@@ -8,9 +8,15 @@ use App\Models\Product;
 use App\Models\User;
 use App\Models\Supplier;
 use App\Models\Customer;
+use App\Models\PurchaseOrder;
+use App\Models\SalesOrder;
+
 use App\Policies\ProductPolicy;
 use App\Policies\SupplierPolicy;
 use App\Policies\CustomerPolicy;
+use App\Policies\PurchaseOrderPolicy;
+use App\Policies\SalesOrderPolicy;
+
 use Illuminate\Support\Facades\Log;
 
 class AuthServiceProvider extends ServiceProvider
@@ -24,6 +30,8 @@ class AuthServiceProvider extends ServiceProvider
         Product::class => ProductPolicy::class,
         Supplier::class => SupplierPolicy::class,
         Customer::class => CustomerPolicy::class,
+        PurchaseOrder::class => PurchaseOrderPolicy::class,
+        SalesOrder::class => SalesOrderPolicy::class,
     ];
 
     /**

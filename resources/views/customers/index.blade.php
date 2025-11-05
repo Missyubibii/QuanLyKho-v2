@@ -79,8 +79,7 @@
                 <div>
                     <label for="is_active" class="block text-sm font-medium text-gray-700 dark:text-gray-300 sr-only">Trạng
                         thái</label>
-                    <select id="is_active" x-model="activeFilter" @change="searchCustomers()" {{-- Gọi hàm searchCustomers
-                        --}}
+                    <select id="is_active" x-model="activeFilter" @change="applyFilters()"
                         class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                         <option value="">Tất cả trạng thái</option>
                         <option value="1">Hoạt động</option>
