@@ -1,8 +1,8 @@
 import './bootstrap';
 
 import Alpine from 'alpinejs';
+import Chart from 'chart.js/auto';
 
-// Import hàm productIndexPage từ file products.js
 import { productIndexPage } from './products.js';
 import { supplierIndexPage } from './suppliers.js';
 import { customerIndexPage } from './customers.js';
@@ -21,6 +21,7 @@ window.purchaseOrderForm = purchaseOrderForm;
 window.dynamicSearch = dynamicSearch;
 window.salesOrderPage = salesOrderPage;
 window.salesOrderForm = salesOrderForm;
+window.Chart = Chart;
 
 window.formatCurrency = function (value) {
     if (isNaN(value)) return '0 đ';

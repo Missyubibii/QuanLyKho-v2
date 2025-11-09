@@ -24,7 +24,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
 });
 
 // Group các route admin
@@ -71,6 +70,16 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Route cho Inventory Movements
     Route::resource('inventory-movements', InventoryMovementController::class)->only(['index', 'show']);
+
+    Route::get('/reports/inventory', [App\Http\Controllers\ReportController::class, 'inventoryReport'])
+        ->name('reports.inventory');
+
+    Route::get('/reports/movements', [App\Http\Controllers\ReportController::class, 'movementReport'])
+        ->name('reports.movements');
+
+    // Route (nâng cao) để lấy dữ liệu cho chart
+    Route::get('/reports/movement-summary', [App\Http\Controllers\ReportController::class, 'movementSummary'])
+        ->name('reports.movement-summary');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
