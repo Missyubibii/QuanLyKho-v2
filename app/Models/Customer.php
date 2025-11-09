@@ -28,8 +28,8 @@ class Customer extends Model
         'is_active' => 'boolean',
     ];
 
-    // public function salesOrders()
-    // {
-    //     return $this->hasMany(SalesOrder::class);
-    // }
+    public function salesOrders()
+    {
+        return $this->hasMany(SalesOrder::class);
+    }
 }

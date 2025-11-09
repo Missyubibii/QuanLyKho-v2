@@ -10,12 +10,14 @@ use App\Models\Supplier;
 use App\Models\Customer;
 use App\Models\PurchaseOrder;
 use App\Models\SalesOrder;
+use App\Models\InventoryMovement;
 
 use App\Policies\ProductPolicy;
 use App\Policies\SupplierPolicy;
 use App\Policies\CustomerPolicy;
 use App\Policies\PurchaseOrderPolicy;
 use App\Policies\SalesOrderPolicy;
+use App\Policies\InventoryMovementPolicy;
 
 use Illuminate\Support\Facades\Log;
 
@@ -32,6 +34,7 @@ class AuthServiceProvider extends ServiceProvider
         Customer::class => CustomerPolicy::class,
         PurchaseOrder::class => PurchaseOrderPolicy::class,
         SalesOrder::class => SalesOrderPolicy::class,
+        InventoryMovement::class => InventoryMovementPolicy::class,
     ];
 
     /**

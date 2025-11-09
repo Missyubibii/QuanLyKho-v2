@@ -52,7 +52,7 @@
                         <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Địa chỉ</label>
                         <p class="mt-1 text-base text-gray-800 dark:text-gray-200">{{ $customer->address ?? '—' }}</p>
                     </div>
-                     {{-- Thêm các trường khác nếu có --}}
+                    {{-- Thêm các trường khác nếu có --}}
                 </div>
             </div>
 
@@ -69,7 +69,7 @@
                 <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Đơn hàng gần đây</h3>
                 </div>
-                 <div class="overflow-x-auto">
+                <div class="overflow-x-auto">
                     <table class="min-w-full text-sm divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="bg-gray-50 dark:bg-gray-700/50">
                             <tr>
@@ -84,10 +84,10 @@
                             @forelse ($customer->salesOrders as $order)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                     <td class="px-4 py-3 font-medium text-indigo-600 dark:text-indigo-400">
-                                        <a href="{{ route('admin.sales-orders.show', $order) }}">{{ $order->order_code ?? $order->id }}</a> {{-- Giả sử có order_code --}}
+                                        <a href="{{ route('admin.sales-orders.show', $order) }}">{{ $order->order_code ?? $order->id }}</a>
                                     </td>
                                     <td class="px-4 py-3">{{ $order->order_date->format('d/m/Y') }}</td>
-                                    <td class="px-4 py-3 text-right">{{ number_format($order->total_amount ?? 0, 0, ',', '.') }} đ</td> {{-- Giả sử có total_amount --}}
+                                    <td class="px-4 py-3 text-right">{{ number_format($order->total_amount ?? 0, 0, ',', '.') }} đ</td>
                                     <td class="px-4 py-3">
                                         {{-- Hiển thị trạng thái của SalesOrder --}}
                                         @switch($order->status)

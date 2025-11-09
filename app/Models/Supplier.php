@@ -30,7 +30,7 @@ class Supplier extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
-    
+
     /**
      * Định nghĩa mối quan hệ với model Product.
      * Một nhà cung cấp có thể có nhiều sản phẩm.
@@ -42,10 +42,10 @@ class Supplier extends Model
         return $this->hasMany(Product::class);
     }
 
-    // public function purchaseOrders()
-    // {
-    //     return $this->hasMany(PurchaseOrder::class);
-    // }
+    public function purchaseOrders()
+    {
+        return $this->hasMany(PurchaseOrder::class);
+    }
 
     // Phương thức để lấy các nhà cung cấp đang hoạt động
     public function scopeActive($query)

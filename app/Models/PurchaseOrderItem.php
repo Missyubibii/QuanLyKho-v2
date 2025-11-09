@@ -37,10 +37,10 @@ class PurchaseOrderItem extends Model
     }
 
     // Accessor để tính subtotal tự động (tùy chọn)
-    // protected static function boot() {
-    //     parent::boot();
-    //     static::saving(function ($item) {
-    //         $item->subtotal = $item->quantity * $item->price;
-    //     });
-    // }
+    protected static function boot() {
+        parent::boot();
+        static::saving(function ($item) {
+            $item->subtotal = $item->quantity * $item->price;
+        });
+    }
 }

@@ -65,15 +65,13 @@
                                 <tr>
                                     <th class="px-4 py-2 text-left font-semibold text-gray-600 dark:text-gray-300">Ngày</th>
                                     <th class="px-4 py-2 text-left font-semibold text-gray-600 dark:text-gray-300">Hành động</th>
-                                    <th class="px-4 py-2 text-left font-semibold text-gray-600 dark:text-gray-300">Số lượng</th>
-                                    <th class="px-4 py-2 text-left font-semibold text-gray-600 dark:text-gray-300">Kho sau CĐ</th>
+                                    <th class="px-4 py-2 text-left font-semibold text-gray-600 dark:text-gray-300">Xuất & nhập kho</th>
+                                    <th class="px-4 py-2 text-left font-semibold text-gray-600 dark:text-gray-300">Tồn kho</th>
                                     <th class="px-4 py-2 text-left font-semibold text-gray-600 dark:text-gray-300">Nguồn</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                                {{-- @forelse ($product->inventoryMovements as $movement) --}}
-                                {{-- BẠN CẦN TRUYỀN BIẾN NÀY TỪ CONTROLLER --}}
-                                {{--
+                                @forelse ($product->inventoryMovements as $movement)
                                 <tr>
                                     <td class="px-4 py-3">{{ $movement->created_at->format('d/m/Y H:i') }}</td>
                                     <td class="px-4 py-3">
@@ -87,14 +85,13 @@
                                     <td class="px-4 py-3">{{ $movement->quantity_after }}</td>
                                     <td class="px-4 py-3">{{ $movement->source_type }}: {{ $movement->source_id }}</td>
                                 </tr>
-                                --}}
-                                {{-- @empty --}}
+                                @empty
                                 <tr>
                                     <td colspan="5" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
                                         Chưa có lịch sử biến động nào.
                                     </td>
                                 </tr>
-                                {{-- @endforelse --}}
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

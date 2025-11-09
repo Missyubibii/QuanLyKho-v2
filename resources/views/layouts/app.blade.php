@@ -17,7 +17,6 @@
         }
     }"
     :class="{ 'dark': darkMode }"
-    {{-- Xóa class mặc định ở đây, vì script bên dưới sẽ xử lý --}}
     >
 <head>
     <meta charset="utf-8">
@@ -25,9 +24,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Quản Lý Kho</title>
 
-    {{-- BỔ SUNG 1: Script chống nháy. PHẢI ĐẶT TRƯỚC @vite --}}
     <script>
-        // Logic này phải khớp với logic trong x-data của bạn
         if (localStorage.getItem('darkMode') === 'true' || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         } else {
@@ -38,7 +35,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-{{-- Thêm các class mặc định vào body --}}
 <body class="h-screen overflow-hidden font-sans antialiased bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
     <div class="flex h-full">
         <x-toast />
@@ -60,7 +56,6 @@
                             </svg>
                         </button>
                         <h1 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
-                            {{-- Sửa: Dùng @yield hoặc $slot thay vì biến $pageTitle không xác định --}}
                             @yield('title', 'Admin Dashboard')
                         </h1>
                     </div>
@@ -112,8 +107,6 @@
 
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900">
                 <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    {{-- Sửa: Dùng @yield('content') hoặc $slot --}}
-                    {{-- @yield('content') --}}
                     @yield('content')
                 </div>
             </main>

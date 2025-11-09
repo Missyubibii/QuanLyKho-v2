@@ -87,9 +87,9 @@ class CustomerController extends Controller
     {
         $this->authorize('view', $customer);
 
-        // $customer->load(['salesOrders' => function ($query) {
-        //     $query->orderBy('created_at', 'desc')->limit(10);
-        // }]);
+        $customer->load(['salesOrders' => function ($query) {
+            $query->orderBy('created_at', 'desc')->limit(10);
+        }]);
 
         return view('customers.show', compact('customer'));
     }

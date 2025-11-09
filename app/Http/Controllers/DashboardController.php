@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
-use App\Models\PurchaseOrder; // Giả định bạn có model này
-use App\Models\SalesOrder;    // Giả định bạn có model này
-use App\Models\InventoryMovement; // Giả định bạn có model này
+use App\Models\PurchaseOrder;
+use App\Models\SalesOrder;
+use App\Models\InventoryMovement;
 
 class DashboardController extends Controller
 {
@@ -22,10 +22,9 @@ class DashboardController extends Controller
             ->where('min_stock', '>', 0)
             ->count();
 
-        // 2. Lấy các chỉ số đơn hàng (Giả định)
-        // BẠN CẦN ĐẢM BẢO CÁC MODEL VÀ TÊN CỘT 'status' NÀY TỒN TẠI
-        // $pendingPurchases = class_exists(PurchaseOrder::class) ? PurchaseOrder::where('status', 'pending')->count() : 0;
-        // $pendingSales = class_exists(SalesOrder::class) ? SalesOrder::where('status', 'pending')->count() : 0;
+        // 2. Lấy các chỉ số đơn hàng
+        $pendingPurchases = PurchaseOrder::where('status', 'pending')->count();
+        $pendingSales = SalesOrder::where('status', 'pending')->count();
 
         // 3. Lấy danh sách sản phẩm sắp hết hàng
         $lowStockProducts = Product::whereColumn('quantity', '<=', 'min_stock')
@@ -34,22 +33,20 @@ class DashboardController extends Controller
             ->take(5) // Lấy 5 sản phẩm
             ->get();
 
-        // 4. Lấy các hoạt động gần đây (Giả định)
-        // $recentMovements = class_exists(InventoryMovement::class)
-        //     ? InventoryMovement::with('product') // Tải kèm thông tin sản phẩm
-        //         ->latest() // Sắp xếp mới nhất
-        //         ->take(5) // Lấy 5 hoạt động
-        //         ->get()
-        //     : []; // Trả về mảng rỗng nếu model không tồn tại
+        // 4. Lấy các hoạt động gần đây (Bỏ comment VÀ SỬA TÊN BIẾN)
+        $inventoryMovements = InventoryMovement::with('product') // Tải kèm thông tin sản phẩm
+                ->latest() // Sắp xếp mới nhất
+                ->take(5) // Lấy 5 hoạt động
+                ->get();
 
         // 5. Trả về view với tất cả dữ liệu
         return view('dashboard', compact(
             'totalProducts',
             'lowStockCount',
-            // 'pendingPurchases',
-            // 'pendingSales',
+            'pendingPurchases',
+            'pendingSales',
             'lowStockProducts',
-            // 'recentMovements'
+            'inventoryMovements'
         ));
     }
 }

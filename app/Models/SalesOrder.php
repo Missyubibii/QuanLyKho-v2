@@ -55,8 +55,8 @@ class SalesOrder extends Model
         return $this->hasMany(SalesOrderItem::class);
     }
 
-    // public function inventoryMovements()
-    // {
-    //     return $this->morphMany(InventoryMovement::class, 'source');
-    // }
+    public function inventoryMovements()
+    {
+        return $this->morphMany(InventoryMovement::class, 'source');
+    }
 }

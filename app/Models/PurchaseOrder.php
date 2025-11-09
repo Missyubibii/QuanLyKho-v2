@@ -35,13 +35,13 @@ class PurchaseOrder extends Model
     {
         parent::boot();
         static::creating(function ($order) {
-            $latestOrder = static::latest('id')->first();
+            $latestOrder = static::withTrashed()->latest('id')->first();
             $nextId = $latestOrder ? $latestOrder->id + 1 : 1;
             $order->po_code = 'PO-' . str_pad($nextId, 5, '0', STR_PAD_LEFT);
         });
     }
 
-    public function supplier(): BelongsTo //
+    public function supplier(): BelongsTo // Nhà cung cấp
     {
         return $this->belongsTo(Supplier::class);
     }
@@ -51,8 +51,13 @@ class PurchaseOrder extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function items(): HasMany //
+    public function items(): HasMany // Các mặt hàng trong PO
     {
         return $this->hasMany(PurchaseOrderItem::class);
+    }
+
+    public function inventoryMovements()
+    {
+        return $this->morphMany(InventoryMovement::class, 'source');
     }
 }

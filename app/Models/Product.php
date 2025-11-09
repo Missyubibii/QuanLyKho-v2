@@ -39,18 +39,18 @@ class Product extends Model
         return $this->belongsTo(Supplier::class);
     }
 
-    // public function purchaseOrderItems()
-    // {
-    //     return $this->hasMany(PurchaseOrderItem::class);
-    // }
+    public function purchaseOrderItems()
+    {
+        return $this->hasMany(PurchaseOrderItem::class);
+    }
 
-    // public function salesOrderItems()
-    // {
-    //     return $this->hasMany(SalesOrderItem::class);
-    // }
+    public function salesOrderItems()
+    {
+        return $this->hasMany(SalesOrderItem::class);
+    }
 
-    // public function inventoryMovements()
-    // {
-    //     return $this->hasMany(InventoryMovement::class);
-    // }
+    public function inventoryMovements()
+    {
+        return $this->hasMany(InventoryMovement::class);
+    }
 }

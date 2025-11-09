@@ -101,62 +101,13 @@ class PurchaseOrderController extends Controller
             return redirect()->route('admin.purchase-orders.index');
         } catch (\Exception $e) {
             DB::rollBack();
+            
             Log::error('Lỗi tạo PO: ' . $e->getMessage());
             session()->flash('toast', ['type' => 'error', 'message' => 'Tạo phiếu nhập kho thất bại.']);
             return redirect()->back()->withInput();
         }
     }
 
-
-    // public function store(StorePurchaseOrderRequest $request, NotificationService $notificationService)
-    // {
-    //     $validatedData = $request->validate([
-    //         'supplier_id' => 'required|exists:suppliers,id',
-    //         'order_date' => 'required|date',
-    //         'expected_date' => 'nullable|date|after_or_equal:order_date',
-    //         'notes' => 'nullable|string',
-    //         'items' => 'required|array|min:1',
-    //         'items.*.product_id' => 'required|exists:products,id',
-    //         'items.*.quantity' => 'required|integer|min:1',
-    //         'items.*.price' => 'required|numeric|min:0',
-    //     ]);
-
-    //     $po = DB::transaction(function () use ($validatedData) {
-    //         $totalAmount = collect($validatedData['items'])->sum(function ($item) {
-    //             return $item['quantity'] * $item['price'];
-    //         });
-
-    //         // Tạo mã phiếu nhập kho tự động
-    //         $poCode = 'PO-' . now()->format('Ymd') . '-' . str_pad(PurchaseOrder::whereDate('created_at', now()->format('Y-m-d'))->count() + 1, 3, '0', STR_PAD_LEFT);
-
-    //         $po = PurchaseOrder::create([
-    //             'po_code' => $poCode, // Thêm mã phiếu
-    //             'supplier_id' => $validatedData['supplier_id'],
-    //             'user_id' => request()->user()->id,
-    //             'order_date' => $validatedData['order_date'],
-    //             'expected_date' => $validatedData['expected_date'],
-    //             'notes' => $validatedData['notes'],
-    //             'status' => 'pending',
-    //             'total_amount' => $totalAmount,
-    //         ]);
-
-    //         foreach ($validatedData['items'] as $item) {
-    //             PurchaseOrderItem::create([
-    //                 'purchase_order_id' => $po->id,
-    //                 'product_id' => $item['product_id'],
-    //                 'quantity' => $item['quantity'],
-    //                 'price' => $item['price'],
-    //             ]);
-    //         }
-    //         $notificationService->notify(Auth::user(), 'success', 'Phiếu nhập mới', 'PO ' . $purchaseOrder->po_code . ' đã được tạo.');
-    //         session()->flash('toast', ['type' => 'success', 'message' => 'Tạo phiếu nhập kho thành công!']);
-
-    //         return $po;
-    //     });
-
-    //     return redirect()->route('admin.purchase-orders.show', $po)
-    //         ->with('success', 'Tạo phiếu nhập kho thành công!');
-    // }
     public function show(PurchaseOrder $purchaseOrder)
     {
         // $this->authorize('view', $purchaseOrder);

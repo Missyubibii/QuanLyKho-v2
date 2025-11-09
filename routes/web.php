@@ -9,6 +9,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\SalesOrderController;
+use App\Http\Controllers\InventoryMovementController;
 
 
 Route::get('/', function () {
@@ -68,6 +69,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/sales-orders/bulk-delete', [SalesOrderController::class, 'bulkDeleteSOs'])->name('sales-orders.bulk-delete');
     Route::post('sales-orders/{sales_order}/ship', [SalesOrderController::class, 'ship'])->name('sales-orders.ship');
 
+    // Route cho Inventory Movements
+    Route::resource('inventory-movements', InventoryMovementController::class)->only(['index', 'show']);
 });
 
 require __DIR__.'/auth.php';
